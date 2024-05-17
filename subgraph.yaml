@@ -1,0 +1,36 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: VaultProxy
+    network: matic
+    source:
+      address: "0xEd599241FaaD49206C54fEF71b50357F8c457b27"
+      abi: VaultProxy
+      startBlock: 56789129
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - RewardPaid
+        - Staked
+        - Withdrawn
+        - Registered
+        - ManagerWithdrawn
+      abis:
+        - name: VaultProxy
+          file: ./abis/VaultProxy.json
+      eventHandlers:
+        - event: RewardPaid(indexed address,uint256)
+          handler: handleRewardPaid
+        - event: Staked(indexed address,uint256)
+          handler: handleStaked
+        - event: Withdrawn(indexed address,uint256)
+          handler: handleWithdrawn
+        - event: Registered(indexed address,address)
+          handler: handleRegistered
+        - event: ManagerWithdrawn(indexed address,uint256)
+          handler: handleManagerWithdrawn
+      file: ./src/vault-proxy.ts
