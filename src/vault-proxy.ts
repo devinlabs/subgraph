@@ -2,6 +2,7 @@ import { BigInt, Bytes, log } from "@graphprotocol/graph-ts"
 import { ManagerWithdrawn, Registered, RewardPaid, Staked, Withdrawn } from "../generated/VaultProxy/VaultProxy"
 import { ONE_BD, ZERO_BD, ZONE_ADDRESS, uploadSystemCount, uploadAddressCount, ONE_HUNDRED } from "./helpers"
 import { stakeAddressCount, withdrawAddressCount, rewardAddressCount, bindAddressCount } from "./helpers"
+import { uploadDayCount } from "./upload"
 
 export function handleRewardPaid(event: RewardPaid): void {
   let sysEntity = uploadSystemCount()
@@ -15,6 +16,10 @@ export function handleRewardPaid(event: RewardPaid): void {
   sysEntity.profitTotalAmount = sysEntity.profitTotalAmount.plus(event.params.amount)
 
   sysEntity.save()
+
+  let dayCountEntity = uploadDayCount(event.block.timestamp)
+  dayCountEntity.profitTotalAmount = dayCountEntity.profitTotalAmount.plus(event.params.amount)
+  dayCountEntity.save()
 
   // 个人信息统计
   let userEntity = uploadAddressCount(event.params.account.toHexString())
@@ -55,6 +60,10 @@ export function handleStaked(event: Staked): void {
   sysEntity.stakeAmountTotal = sysEntity.stakeAmountTotal.plus(event.params.amount)
   sysEntity.actualBalance =  sysEntity.actualBalance.plus(event.params.amount)
 
+  let dayCountEntity = uploadDayCount(event.block.timestamp)
+  dayCountEntity.stakeAmount = dayCountEntity.stakeAmount.plus(event.params.amount)
+  dayCountEntity.save()
+
   // 个人信息统计
   let userEntity = uploadAddressCount(event.params.account.toHexString())
   if (userEntity.crateAt.equals(ZERO_BD)) userEntity.crateAt = event.block.timestamp
@@ -88,6 +97,10 @@ export function handleStaked(event: Staked): void {
 }
 
 export function handleWithdrawn(event: Withdrawn): void {
+  let dayCountEntity = uploadDayCount(event.block.timestamp)
+  dayCountEntity.withdrawnAmount = dayCountEntity.withdrawnAmount.plus(event.params.amount)
+  dayCountEntity.save()
+
   let sysEntity = uploadSystemCount()
   if (sysEntity.crateAt.equals(ZERO_BD)) sysEntity.crateAt = event.block.timestamp
   sysEntity.updateAt = event.block.timestamp
@@ -151,4 +164,7 @@ export function handleManagerWithdrawn(event: ManagerWithdrawn): void {
   sysEntity.save()
 
   
+  let dayCountEntity = uploadDayCount(event.block.timestamp)
+  dayCountEntity.managerWithdrawnAmount = dayCountEntity.managerWithdrawnAmount.plus(event.params.amount)
+  dayCountEntity.save()
 }

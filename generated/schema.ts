@@ -465,6 +465,111 @@ export class AddressCheck extends Entity {
   }
 }
 
+export class DayCount extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save DayCount entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type DayCount must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("DayCount", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): DayCount | null {
+    return changetype<DayCount | null>(store.get_in_block("DayCount", id));
+  }
+
+  static load(id: string): DayCount | null {
+    return changetype<DayCount | null>(store.get("DayCount", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get stakeAmount(): BigInt {
+    let value = this.get("stakeAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set stakeAmount(value: BigInt) {
+    this.set("stakeAmount", Value.fromBigInt(value));
+  }
+
+  get profitTotalAmount(): BigInt {
+    let value = this.get("profitTotalAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set profitTotalAmount(value: BigInt) {
+    this.set("profitTotalAmount", Value.fromBigInt(value));
+  }
+
+  get withdrawnAmount(): BigInt {
+    let value = this.get("withdrawnAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set withdrawnAmount(value: BigInt) {
+    this.set("withdrawnAmount", Value.fromBigInt(value));
+  }
+
+  get managerWithdrawnAmount(): BigInt {
+    let value = this.get("managerWithdrawnAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set managerWithdrawnAmount(value: BigInt) {
+    this.set("managerWithdrawnAmount", Value.fromBigInt(value));
+  }
+
+  get crateAt(): BigInt {
+    let value = this.get("crateAt");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set crateAt(value: BigInt) {
+    this.set("crateAt", Value.fromBigInt(value));
+  }
+}
+
 export class AddressCheckLoader extends Entity {
   _entity: string;
   _field: string;

@@ -34,3 +34,12 @@ type AddressCheck @entity {
   rewardPaidAmount: BigInt! #奖励金额
   upperAddressInfo: [AddressCheck!]! @derivedFrom(field: "upperId") #上级用户信息
 }
+
+type DayCount @entity {
+  id: ID! #当前的时间戳
+  stakeAmount: BigInt! #当日质押
+  profitTotalAmount: BigInt! #当日利润
+  withdrawnAmount: BigInt! #当日赎回
+  managerWithdrawnAmount: BigInt! #当日提出
+  crateAt: BigInt! #创建时间
+} 
