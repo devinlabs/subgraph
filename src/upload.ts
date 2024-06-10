@@ -15,7 +15,7 @@ export function uploadDayCount(time: BigInt): DayCount{
   let dayID =  BigInt.fromI32(timestamp).minus(DAYS_START).div(DAYS_TIME)
   let entity = DayCount.load(dayID.toString())
   if (!entity) {
-    entity = new DayCount(time.toString())
+    entity = new DayCount(dayID.toString())
     entity.stakeAmount = ZERO_BD
     entity.withdrawnAmount = ZERO_BD
     entity.managerWithdrawnAmount = ZERO_BD
