@@ -10,7 +10,7 @@ export const DAYS_TIME = BigInt.fromI32(86400)
 export const DAYS_START = BigInt.fromI32(1715317483)
 
 
-export function uploadDayCount(time: BigInt){
+export function uploadDayCount(time: BigInt): DayCount{
   let timestamp = time.toI32()
   let dayID =  BigInt.fromI32(timestamp).minus(DAYS_START).div(DAYS_TIME)
   let entity = DayCount.load(dayID.toString())
