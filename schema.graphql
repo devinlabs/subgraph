@@ -23,6 +23,7 @@ type AddressCheck @entity {
   teamWithdrawnAmount: BigInt! #团队赎回金额
   teamRewardPaidAmount: BigInt! #团队奖励金额
   teamAddressTotal: BigInt! #团队地址总数
+  teamAddressTotalList: [Bytes!]! #团队地址总数-对应的地址
   crateAt: BigInt! #创建时间
   updateAt: BigInt! #更新时间
   teamAddressList: [Bytes!]! #团队地址列表
