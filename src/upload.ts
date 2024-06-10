@@ -7,7 +7,7 @@ import { ZERO_BD } from "./helpers"
  */
 // 86400
 export const DAYS_TIME = BigInt.fromI32(86400)
-export const DAYS_START = BigInt.fromI32(1715317483)
+export const DAYS_START = BigInt.fromI32(1715270400)
 
 
 export function uploadDayCount(time: BigInt): DayCount{

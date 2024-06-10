@@ -87,7 +87,7 @@ export function stakeAddressCount(account: Bytes, amount: BigInt, referrer: Byte
     if (account.notEqual(referrer)) {
       teamAddressTotalList.push(account)
       upperEntity.teamAddressTotalList = teamAddressTotalList
-      upperEntity.teamAddressTotal = BigInt.fromI32(teamAddressTotalList.length)
+      upperEntity.teamAddressTotal = BigInt.fromI32(teamAddressTotalList.length).plus(ONE_BD)
     }
   }
   // end
@@ -150,7 +150,7 @@ export function bindAddressCount(account: Bytes,referrer: Bytes, withdrawnAmount
     if (account.notEqual(referrer)) {
       teamAddressTotalList.push(account)
       upperEntity.teamAddressTotalList = teamAddressTotalList
-      upperEntity.teamAddressTotal = BigInt.fromI32(teamAddressTotalList.length)
+      upperEntity.teamAddressTotal = BigInt.fromI32(teamAddressTotalList.length).plus(ONE_BD)
     }
   }
   // end
