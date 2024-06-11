@@ -72,6 +72,7 @@ export function handleStaked(event: Staked): void {
   userEntity.stakeAmount = userEntity.stakeAmount.plus(event.params.amount)
   userEntity.teamStakeAmount = userEntity.teamStakeAmount.plus(event.params.amount)
   userEntity.teamStakeAmountTotal = userEntity.teamStakeAmountTotal.plus(event.params.amount)
+  userEntity.save()
 
   let shouldTeam = userEntity.stakeAmount.ge(ONE_HUNDRED) && !userEntity.activated
   if (shouldTeam) {
@@ -143,6 +144,7 @@ export function handleWithdrawn(event: Withdrawn): void {
   userEntity.teamWithdrawnAmount = userEntity.teamWithdrawnAmount.plus(event.params.amount)
   userEntity.stakeAmount = userEntity.stakeAmount.minus(event.params.amount)
   userEntity.teamStakeAmount = userEntity.teamStakeAmount.minus(event.params.amount)
+  userEntity.save()
 
   let shouldTeam = userEntity.stakeAmount.lt(ONE_HUNDRED) && userEntity.activated
 
@@ -203,10 +205,10 @@ export function handleRegistered(event: Registered): void {
   // log.info("referrer: {}, account:{}", [event.params.referrer.toHexString(), event.params.account.toHexString()])
   entity.save()
   let shouldTeam = entity.stakeAmount.ge(ONE_HUNDRED) && !entity.activated
-  if (shouldTeam) {
-    entity.activated = true
-    entity.teamAddressTotal = entity.teamAddressTotal.plus(ONE_BD)
-  }
+  // if (shouldTeam) {
+  //   entity.activated = true
+  //   entity.teamAddressTotal = entity.teamAddressTotal.plus(ONE_BD)
+  // }
 
   // 循环往上级添加团队人数、团队质押、团队质押总额
   let referrer = entity.referrer
@@ -214,7 +216,7 @@ export function handleRegistered(event: Registered): void {
   while(referrer.notEqual(ZONE_ADDRESS)) {
     let upperEntity = uploadAddressCount(referrer.toHexString())
     if (shouldTeam) {
-      upperEntity.teamAddressTotal = upperEntity.teamAddressTotal.plus(ONE_BD)
+      // upperEntity.teamAddressTotal = upperEntity.teamAddressTotal.plus(ONE_BD)
       let teamAddressList = upperEntity.teamAddressList
       teamAddressList.push(event.params.account)
       if (isWhileNum.equals(ZERO_BD)) {
