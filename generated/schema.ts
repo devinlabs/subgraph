@@ -339,19 +339,6 @@ export class AddressCheck extends Entity {
     this.set("teamAddressTotal", Value.fromBigInt(value));
   }
 
-  get teamAddressTotalList(): Array<Bytes> {
-    let value = this.get("teamAddressTotalList");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytesArray();
-    }
-  }
-
-  set teamAddressTotalList(value: Array<Bytes>) {
-    this.set("teamAddressTotalList", Value.fromBytesArray(value));
-  }
-
   get crateAt(): BigInt {
     let value = this.get("crateAt");
     if (!value || value.kind == ValueKind.NULL) {
@@ -462,6 +449,19 @@ export class AddressCheck extends Entity {
       this.get("id")!.toString(),
       "upperAddressInfo"
     );
+  }
+
+  get activated(): boolean {
+    let value = this.get("activated");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set activated(value: boolean) {
+    this.set("activated", Value.fromBoolean(value));
   }
 }
 

@@ -35,8 +35,7 @@ export function uploadAddressCount(address:string):AddressCheck {
   let entity = AddressCheck.load(address.toString())
   if (!entity) {
     entity = new AddressCheck(address.toString())
-    entity.teamAddressTotal = ONE_BD
-    entity.teamAddressTotalList = []
+    entity.teamAddressTotal = ZERO_BD
     entity.crateAt = ZERO_BD
     entity.updateAt = ZERO_BD
     entity.teamStakeAmount = ZERO_BD
@@ -50,63 +49,34 @@ export function uploadAddressCount(address:string):AddressCheck {
     entity.upperId = ''
     entity.stakeAmountTotal = ZERO_BD
     entity.teamStakeAmountTotal = ZERO_BD
+    entity.activated = false
   }
   entity.save()
   return entity as AddressCheck
 }
 
 // 质押无限循环注入
-export function stakeAddressCount(account: Bytes, amount: BigInt, referrer: Bytes, isDrr: boolean):void {
-  let upperEntity = uploadAddressCount(referrer.toHexString())
-  upperEntity.teamStakeAmount = upperEntity.teamStakeAmount.plus(amount)
-  upperEntity.teamStakeAmountTotal = upperEntity.teamStakeAmountTotal.plus(amount)
-  // 团队地址列表、人数
-  let teamAddressList = upperEntity.teamAddressList
-  let isTeamStakeAddress = false // 判断当前用户地址是否已经质押过
-  for (let i = 0; i < teamAddressList.length; i++) {
-    if (teamAddressList[i].equals(account)) {
-      isTeamStakeAddress = true
-    }
-  }
-  if (!isTeamStakeAddress) {
-    if (account.notEqual(referrer)) {
-      teamAddressList.push(account)
-      if (isDrr) upperEntity.teamAddressList = teamAddressList
-    }
-  }
-  
-  // 团队地址列表、人数 - total
-  let teamAddressTotalList = upperEntity.teamAddressTotalList
-  let isTeamStakeAddressTotal = false // 判断当前用户地址是否已经质押过
-  for (let i = 0; i < teamAddressTotalList.length; i++) {
-    if (teamAddressTotalList[i].equals(account)) {
-      isTeamStakeAddressTotal = true
-    }
-  }
-  if (!isTeamStakeAddressTotal) {
-    if (account.notEqual(referrer)) {
-      teamAddressTotalList.push(account)
-      upperEntity.teamAddressTotalList = teamAddressTotalList
-      upperEntity.teamAddressTotal = BigInt.fromI32(teamAddressTotalList.length).plus(ONE_BD)
-    }
-  }
-  // end
-  upperEntity.save()
-  if (upperEntity.referrer.notEqual(ZONE_ADDRESS)) {
-    stakeAddressCount(account, amount, upperEntity.referrer, false)
-  }
-}
-
-// 赎回无限循环注入
-export function withdrawAddressCount(account: Bytes, amount: BigInt):void {
-  let upperEntity = uploadAddressCount(account.toHexString())
-  upperEntity.teamWithdrawnAmount = upperEntity.teamWithdrawnAmount.plus(amount)
-  upperEntity.teamStakeAmount = upperEntity.teamStakeAmount.minus(amount)
-  upperEntity.save()
-  if (upperEntity.referrer.notEqual(ZONE_ADDRESS)) {
-    withdrawAddressCount(upperEntity.referrer, amount)
-  }
-}
+// export function stakeAddressCount(account: Bytes, amount: BigInt, referrer: Bytes, isDrr: boolean):void {
+//   let upperEntity = uploadAddressCount(referrer.toHexString())
+//   // 团队地址列表、人数
+//   let teamAddressList = upperEntity.teamAddressList
+//   let isTeamStakeAddress = false // 判断当前用户地址是否已经质押过
+//   for (let i = 0; i < teamAddressList.length; i++) {
+//     if (teamAddressList[i].equals(account)) {
+//       isTeamStakeAddress = true
+//     }
+//   }
+//   let isPush = !isTeamStakeAddress && account.notEqual(referrer) && upperEntity.activated
+//   if (isPush) {
+//     teamAddressList.push(account)
+//     if (isDrr) upperEntity.teamAddressList = teamAddressList
+//   }
+//   // end
+//   upperEntity.save()
+//   if (upperEntity.referrer.notEqual(ZONE_ADDRESS)) {
+//     stakeAddressCount(account, amount, upperEntity.referrer, false)
+//   }
+// }
 
 // 领取无限循环注入
 export function rewardAddressCount(account: Bytes, amount: BigInt):void {
@@ -119,43 +89,27 @@ export function rewardAddressCount(account: Bytes, amount: BigInt):void {
 }
 
 // 绑定关系后无限循环注入
-export function bindAddressCount(account: Bytes,referrer: Bytes, withdrawnAmount: BigInt,rewardPaidAmount: BigInt, stakeAmount: BigInt, isDrr: boolean):void {
-  let upperEntity = uploadAddressCount(referrer.toHexString())
-  upperEntity.teamWithdrawnAmount = upperEntity.teamWithdrawnAmount.plus(withdrawnAmount)
-  upperEntity.teamRewardPaidAmount = upperEntity.teamRewardPaidAmount.plus(rewardPaidAmount)
-  upperEntity.teamStakeAmount = upperEntity.teamStakeAmount.plus(stakeAmount)
-  // 团队地址列表、人数
-  let teamAddressList = upperEntity.teamAddressList
-  let isTeamStakeAddress = false // 判断当前用户地址是否已经质押过
-  for (let i = 0; i < teamAddressList.length; i++) {
-    if (teamAddressList[i].equals(account)) {
-      isTeamStakeAddress = true
-    }
-  }
-  if (!isTeamStakeAddress) {
-    if (account.notEqual(referrer)) {
-      teamAddressList.push(account)
-      if (isDrr) upperEntity.teamAddressList = teamAddressList
-    }
-  }
-  // 团队地址列表、人数 - total
-  let teamAddressTotalList = upperEntity.teamAddressTotalList
-  let isTeamStakeAddressTotal = false // 判断当前用户地址是否已经质押过
-  for (let i = 0; i < teamAddressTotalList.length; i++) {
-    if (teamAddressTotalList[i].equals(account)) {
-      isTeamStakeAddressTotal = true
-    }
-  }
-  if (!isTeamStakeAddressTotal) {
-    if (account.notEqual(referrer)) {
-      teamAddressTotalList.push(account)
-      upperEntity.teamAddressTotalList = teamAddressTotalList
-      upperEntity.teamAddressTotal = BigInt.fromI32(teamAddressTotalList.length).plus(ONE_BD)
-    }
-  }
-  // end
-  upperEntity.save()
-  if (upperEntity.referrer.notEqual(ZONE_ADDRESS)) {
-    bindAddressCount(account, upperEntity.referrer, withdrawnAmount, rewardPaidAmount, stakeAmount, false)
-  }
-}
+// export function bindAddressCount(account: Bytes,referrer: Bytes, withdrawnAmount: BigInt,rewardPaidAmount: BigInt, stakeAmount: BigInt, isDrr: boolean):void {
+//   let upperEntity = uploadAddressCount(referrer.toHexString())
+//   upperEntity.teamWithdrawnAmount = upperEntity.teamWithdrawnAmount.plus(withdrawnAmount)
+//   upperEntity.teamRewardPaidAmount = upperEntity.teamRewardPaidAmount.plus(rewardPaidAmount)
+//   upperEntity.teamStakeAmount = upperEntity.teamStakeAmount.plus(stakeAmount)
+//   // 团队地址列表、人数
+//   let teamAddressList = upperEntity.teamAddressList
+//   let isTeamStakeAddress = false // 判断当前用户地址是否已经质押过
+//   for (let i = 0; i < teamAddressList.length; i++) {
+//     if (teamAddressList[i].equals(account)) {
+//       isTeamStakeAddress = true
+//     }
+//   }
+//   let isPush = !isTeamStakeAddress && account.notEqual(referrer) && upperEntity.activated
+//   if (isPush) {
+//     teamAddressList.push(account)
+//     if (isDrr) upperEntity.teamAddressList = teamAddressList
+//   }
+//   // end
+//   upperEntity.save()
+//   if (upperEntity.referrer.notEqual(ZONE_ADDRESS)) {
+//     bindAddressCount(account, upperEntity.referrer, withdrawnAmount, rewardPaidAmount, stakeAmount, false)
+//   }
+// }
