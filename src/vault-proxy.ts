@@ -90,16 +90,24 @@ export function handleStaked(event: Staked): void {
   while(referrer.notEqual(ZONE_ADDRESS)) {
     let upperEntity = uploadAddressCount(referrer.toHexString())
     // 质押完成后，向上级添加团队人数
-    if (shouldTeam) upperEntity.teamAddressTotal = upperEntity.teamAddressTotal.plus(ONE_BD)
-    let teamAddressList = upperEntity.teamAddressList
-    let teamList: Bytes[] = []
-    for (let i = 0; i < teamAddressList.length; i++) {
-      const element = teamAddressList[i];
-      if (element.notEqual(event.params.account)) {
-        teamList.push(element)
+    if (shouldTeam) {
+      upperEntity.teamAddressTotal = upperEntity.teamAddressTotal.plus(ONE_BD)
+      if (isWhileNum.equals(ZERO_BD)) {
+        let teamAddressList = upperEntity.teamAddressList
+        let isListTrue = true
+        for (let i = 0; i < teamAddressList.length; i++) {
+          const element = teamAddressList[i];
+          if (element.equals(event.params.account)) {
+            isListTrue = false
+            break
+          }
+        }
+        if (isListTrue) {
+          teamAddressList.push(event.params.account)
+          upperEntity.teamAddressList = teamAddressList
+        }
       }
     }
-    upperEntity.teamAddressList = teamList
 
     upperEntity.teamStakeAmount = upperEntity.teamStakeAmount.plus(event.params.amount)
     upperEntity.teamStakeAmountTotal = upperEntity.teamStakeAmountTotal.plus(event.params.amount)
@@ -166,17 +174,19 @@ export function handleWithdrawn(event: Withdrawn): void {
     let upperEntity = uploadAddressCount(referrer.toHexString())
 
     // 赎回后，往上级减少质押金额
-    if(shouldTeam) upperEntity.teamAddressTotal = upperEntity.teamAddressTotal.minus(ONE_BD)
-    if (isWhileNum.equals(ZERO_BD)) {
-      let teamAddressList = upperEntity.teamAddressList
-      let teamList: Bytes[] = []
-      for (let i = 0; i < teamAddressList.length; i++) {
-        const element = teamAddressList[i];
-        if (element.notEqual(event.params.account)) {
-          teamList.push(element)
+    if (shouldTeam) {
+      upperEntity.teamAddressTotal = upperEntity.teamAddressTotal.minus(ONE_BD)
+      if (isWhileNum.equals(ZERO_BD)) {
+        let teamAddressList = upperEntity.teamAddressList
+        let teamList: Bytes[] = []
+        for (let i = 0; i < teamAddressList.length; i++) {
+          const element = teamAddressList[i];
+          if (element.notEqual(event.params.account)) {
+            teamList.push(element)
+          }
         }
+        upperEntity.teamAddressList = teamList
       }
-      upperEntity.teamAddressList = teamList
     }
 
     upperEntity.teamWithdrawnAmount = upperEntity.teamWithdrawnAmount.plus(event.params.amount)
@@ -218,15 +228,11 @@ export function handleRegistered(event: Registered): void {
   let isWhileNum = ZERO_BD
   while(referrer.notEqual(ZONE_ADDRESS)) {
     let upperEntity = uploadAddressCount(referrer.toHexString())
-    let teamAddressList = upperEntity.teamAddressList
-    let teamList: Bytes[] = []
-    for (let i = 0; i < teamAddressList.length; i++) {
-      const element = teamAddressList[i];
-      if (element.notEqual(event.params.account)) {
-        teamList.push(element)
-      }
+    if(shouldTeam) {
+      let teamAddressList = upperEntity.teamAddressList
+      teamAddressList.push(event.params.account)
+      if (isWhileNum.equals(ZERO_BD)) upperEntity.teamAddressList = teamAddressList
     }
-    upperEntity.teamAddressList = teamList
 
     upperEntity.teamWithdrawnAmount = upperEntity.teamWithdrawnAmount.plus(entity.teamWithdrawnAmount)
     upperEntity.teamRewardPaidAmount = upperEntity.teamRewardPaidAmount.plus(entity.teamRewardPaidAmount)
