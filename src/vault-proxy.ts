@@ -92,8 +92,14 @@ export function handleStaked(event: Staked): void {
     // 质押完成后，向上级添加团队人数
     if (shouldTeam) upperEntity.teamAddressTotal = upperEntity.teamAddressTotal.plus(ONE_BD)
     let teamAddressList = upperEntity.teamAddressList
-    teamAddressList.push(event.params.account)
-    if (isWhileNum.equals(ZERO_BD)) upperEntity.teamAddressList = teamAddressList
+    let teamList: Bytes[] = []
+    for (let i = 0; i < teamAddressList.length; i++) {
+      const element = teamAddressList[i];
+      if (element.notEqual(event.params.account)) {
+        teamList.push(element)
+      }
+    }
+    upperEntity.teamAddressList = teamList
 
     upperEntity.teamStakeAmount = upperEntity.teamStakeAmount.plus(event.params.amount)
     upperEntity.teamStakeAmountTotal = upperEntity.teamStakeAmountTotal.plus(event.params.amount)
@@ -213,10 +219,14 @@ export function handleRegistered(event: Registered): void {
   while(referrer.notEqual(ZONE_ADDRESS)) {
     let upperEntity = uploadAddressCount(referrer.toHexString())
     let teamAddressList = upperEntity.teamAddressList
-    teamAddressList.push(event.params.account)
-    if (isWhileNum.equals(ZERO_BD)) {
-      upperEntity.teamAddressList = teamAddressList
+    let teamList: Bytes[] = []
+    for (let i = 0; i < teamAddressList.length; i++) {
+      const element = teamAddressList[i];
+      if (element.notEqual(event.params.account)) {
+        teamList.push(element)
+      }
     }
+    upperEntity.teamAddressList = teamList
 
     upperEntity.teamWithdrawnAmount = upperEntity.teamWithdrawnAmount.plus(entity.teamWithdrawnAmount)
     upperEntity.teamRewardPaidAmount = upperEntity.teamRewardPaidAmount.plus(entity.teamRewardPaidAmount)
