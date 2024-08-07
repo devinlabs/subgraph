@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class Initialized extends ethereum.Event {
@@ -293,7 +293,7 @@ export class VaultProxy__usersResult {
     value5: BigInt,
     value6: BigInt,
     value7: BigInt,
-    value8: boolean
+    value8: boolean,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -311,7 +311,7 @@ export class VaultProxy__usersResult {
     map.set("value0", ethereum.Value.fromAddress(this.value0));
     map.set(
       "value1",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value1))
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value1)),
     );
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
@@ -369,7 +369,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.call(
       "DEFAULT_ADMIN_ROLE",
       "DEFAULT_ADMIN_ROLE():(bytes32)",
-      []
+      [],
     );
 
     return result[0].toBytes();
@@ -379,7 +379,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.tryCall(
       "DEFAULT_ADMIN_ROLE",
       "DEFAULT_ADMIN_ROLE():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -407,7 +407,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.call(
       "MIN_STAKE_AMOUNT",
       "MIN_STAKE_AMOUNT():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -417,7 +417,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.tryCall(
       "MIN_STAKE_AMOUNT",
       "MIN_STAKE_AMOUNT():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -430,7 +430,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.call(
       "UPGRADE_INTERFACE_VERSION",
       "UPGRADE_INTERFACE_VERSION():(string)",
-      []
+      [],
     );
 
     return result[0].toString();
@@ -440,7 +440,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.tryCall(
       "UPGRADE_INTERFACE_VERSION",
       "UPGRADE_INTERFACE_VERSION():(string)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -481,7 +481,7 @@ export class VaultProxy extends ethereum.SmartContract {
 
   earned(account: Address): BigInt {
     let result = super.call("earned", "earned(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toBigInt();
@@ -489,7 +489,7 @@ export class VaultProxy extends ethereum.SmartContract {
 
   try_earned(account: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("earned", "earned(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -500,7 +500,7 @@ export class VaultProxy extends ethereum.SmartContract {
 
   getRoleAdmin(role: Bytes): Bytes {
     let result = super.call("getRoleAdmin", "getRoleAdmin(bytes32):(bytes32)", [
-      ethereum.Value.fromFixedBytes(role)
+      ethereum.Value.fromFixedBytes(role),
     ]);
 
     return result[0].toBytes();
@@ -510,7 +510,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.tryCall(
       "getRoleAdmin",
       "getRoleAdmin(bytes32):(bytes32)",
-      [ethereum.Value.fromFixedBytes(role)]
+      [ethereum.Value.fromFixedBytes(role)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -522,7 +522,7 @@ export class VaultProxy extends ethereum.SmartContract {
   hasRole(role: Bytes, account: Address): boolean {
     let result = super.call("hasRole", "hasRole(bytes32,address):(bool)", [
       ethereum.Value.fromFixedBytes(role),
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toBoolean();
@@ -531,7 +531,7 @@ export class VaultProxy extends ethereum.SmartContract {
   try_hasRole(role: Bytes, account: Address): ethereum.CallResult<boolean> {
     let result = super.tryCall("hasRole", "hasRole(bytes32,address):(bool)", [
       ethereum.Value.fromFixedBytes(role),
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -544,24 +544,24 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.call(
       "levelOptions",
       "levelOptions(uint256):(uint256,uint256,uint256,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
 
     return new VaultProxy__levelOptionsResult(
       result[0].toBigInt(),
       result[1].toBigInt(),
       result[2].toBigInt(),
-      result[3].toBigInt()
+      result[3].toBigInt(),
     );
   }
 
   try_levelOptions(
-    param0: BigInt
+    param0: BigInt,
   ): ethereum.CallResult<VaultProxy__levelOptionsResult> {
     let result = super.tryCall(
       "levelOptions",
       "levelOptions(uint256):(uint256,uint256,uint256,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -572,8 +572,8 @@ export class VaultProxy extends ethereum.SmartContract {
         value[0].toBigInt(),
         value[1].toBigInt(),
         value[2].toBigInt(),
-        value[3].toBigInt()
-      )
+        value[3].toBigInt(),
+      ),
     );
   }
 
@@ -602,7 +602,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.tryCall(
       "proxiableUUID",
       "proxiableUUID():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -613,7 +613,7 @@ export class VaultProxy extends ethereum.SmartContract {
 
   rebate(account: Address): BigInt {
     let result = super.call("rebate", "rebate(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toBigInt();
@@ -621,7 +621,7 @@ export class VaultProxy extends ethereum.SmartContract {
 
   try_rebate(account: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("rebate", "rebate(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -640,7 +640,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.tryCall(
       "rewardPerToken",
       "rewardPerToken():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -653,7 +653,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.call(
       "rewardPerTokenStored",
       "rewardPerTokenStored():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -663,7 +663,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.tryCall(
       "rewardPerTokenStored",
       "rewardPerTokenStored():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -691,7 +691,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -701,7 +701,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -759,7 +759,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.call(
       "users",
       "users(address):(address,uint8,uint32,uint256,uint256,uint256,uint256,uint256,bool)",
-      [ethereum.Value.fromAddress(param0)]
+      [ethereum.Value.fromAddress(param0)],
     );
 
     return new VaultProxy__usersResult(
@@ -771,7 +771,7 @@ export class VaultProxy extends ethereum.SmartContract {
       result[5].toBigInt(),
       result[6].toBigInt(),
       result[7].toBigInt(),
-      result[8].toBoolean()
+      result[8].toBoolean(),
     );
   }
 
@@ -779,7 +779,7 @@ export class VaultProxy extends ethereum.SmartContract {
     let result = super.tryCall(
       "users",
       "users(address):(address,uint8,uint32,uint256,uint256,uint256,uint256,uint256,bool)",
-      [ethereum.Value.fromAddress(param0)]
+      [ethereum.Value.fromAddress(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -795,8 +795,8 @@ export class VaultProxy extends ethereum.SmartContract {
         value[5].toBigInt(),
         value[6].toBigInt(),
         value[7].toBigInt(),
-        value[8].toBoolean()
-      )
+        value[8].toBoolean(),
+      ),
     );
   }
 }
