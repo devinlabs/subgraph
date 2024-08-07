@@ -21,7 +21,7 @@ dataSources:
         - ManagerWithdrawn
       abis:
         - name: VaultProxy
-          file: VaultProxy/abis/VaultProxy.json
+          file: VaultProxy/VaultProxy.json
       eventHandlers:
         - event: RewardPaid(indexed address,uint256)
           handler: handleRewardPaid
