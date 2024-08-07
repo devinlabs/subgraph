@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal
+  BigDecimal,
 } from "@graphprotocol/graph-ts";
 
 export class AiBoxCount extends Entity {
@@ -23,7 +23,7 @@ export class AiBoxCount extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type AiBoxCount must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type AiBoxCount must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("AiBoxCount", id.toString(), this);
     }
@@ -232,7 +232,7 @@ export class AddressCheck extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type AddressCheck must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type AddressCheck must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("AddressCheck", id.toString(), this);
     }
@@ -240,7 +240,7 @@ export class AddressCheck extends Entity {
 
   static loadInBlock(id: string): AddressCheck | null {
     return changetype<AddressCheck | null>(
-      store.get_in_block("AddressCheck", id)
+      store.get_in_block("AddressCheck", id),
     );
   }
 
@@ -447,7 +447,7 @@ export class AddressCheck extends Entity {
     return new AddressCheckLoader(
       "AddressCheck",
       this.get("id")!.toString(),
-      "upperAddressInfo"
+      "upperAddressInfo",
     );
   }
 
@@ -477,7 +477,7 @@ export class DayCount extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DayCount must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DayCount must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("DayCount", id.toString(), this);
     }
